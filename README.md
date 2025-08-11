@@ -69,13 +69,9 @@ This guide provides the steps to build both components from scratch for a truly 
 1.  **Configure I2P Tunnel**:
     * Using a text-based browser on the Gateway (e.g., `w3m`), navigate to the router console at `http://127.0.0.1:7657`.
     * Go to **"I2PTunnel"**.
-    * Create a new **"SOCKS 4/4a/5"** client tunnel with these settings:
-        * **Name**: `i2nix-transproxy`
+    * Modify the new **"HTTP Proxy"** client tunnel with these settings:
         * **Interface**: `10.152.152.10`
-        * **Port**: `7667`
-        * **Outproxies**: `outproxy.acetone.i2p` (or another reliable outproxy)
-        * Enable **"Auto Start"**.
-    * Save and start the new tunnel.
+        * **Port**: `4444`
 
 2.  **Apply Firewall Rules**:
     * Install the persistence tool: `sudo apt-get install iptables-persistent`.
@@ -87,7 +83,6 @@ This guide provides the steps to build both components from scratch for a truly 
     GATEWAY_INTERNAL_IP="10.152.152.10"
     INTERNAL_INTERFACE="enp7s0" # CHANGE IF YOURS IS DIFFERENT
     I2P_DNS_PORT="7653"
-    I2P_TRANS_PORT="7667"
 
     # Flush old rules
     iptables --flush
@@ -98,11 +93,6 @@ This guide provides the steps to build both components from scratch for a truly 
     # DNS
     iptables -t nat -A PREROUTING -i $INTERNAL_INTERFACE -p udp --dport 53 -j DNAT --to-destination $GATEWAY_INTERNAL_IP:$I2P_DNS_PORT
     iptables -t nat -A PREROUTING -i $INTERNAL_INTERFACE -p tcp --dport 53 -j DNAT --to-destination $GATEWAY_INTERNAL_IP:$I2P_DNS_PORT
-    # All other TCP
-    iptables -t nat -A PREROUTING -i $INTERNAL_INTERFACE -p tcp --syn -j DNAT --to-destination $GATEWAY_INTERNAL_IP:$I2P_TRANS_PORT
-
-    # Filter Table: Permit forwarding of redirected traffic
-    iptables -A FORWARD -i $INTERNAL_INTERFACE -d $GATEWAY_INTERNAL_IP -p tcp --dport $I2P_TRANS_PORT -m state --state NEW -j ACCEPT
     iptables -A FORWARD -i $INTERNAL_INTERFACE -d $GATEWAY_INTERNAL_IP -p tcp --dport $I2P_DNS_PORT -m state --state NEW -j ACCEPT
     iptables -A FORWARD -i $INTERNAL_INTERFACE -d $GATEWAY_INTERNAL_IP -p udp --dport $I2P_DNS_PORT -m state --state NEW -j ACCEPT
     iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
@@ -160,9 +150,7 @@ This guide provides the steps to build both components from scratch for a truly 
     * `privacy.firstparty.isolate`
     * `network.proxy.socks_remote_dns`
 5.  **In LibreWolf Network Settings**, configure a manual proxy:
-    * **SOCKS Host**: `10.152.152.10`, **Port**: `7667`
-    * Select **SOCKS v5**.
-    * Check **"Proxy DNS when using SOCKS v5"**.
+    * **HTTP Host**: `10.152.152.10`, **Port**: `4444`
 
 ### Step 4.2: Application Sandboxing (Firejail)
 1.  Install Firejail: `sudo apt install firejail firejail-profiles`.
