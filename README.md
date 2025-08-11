@@ -138,7 +138,7 @@ This guide provides the steps to build both components from scratch for a truly 
 ### Step 3.3: Connection Test
 1.  `ping 10.152.152.10` -> **Should PASS**.
 2.  `ping 8.8.8.8` -> **Should FAIL**.
-3.  `curl check.i2p` -> **Should SUCCEED** and return HTML.
+3.  `wget stats.i2p` -> **Should SUCCEED** and return HTML.
 
 ## 4. Hardening the i2nix-workstation
 
