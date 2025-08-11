@@ -6,8 +6,8 @@
 ## 1. Introduction
 i2nix is a security-focused Linux operating system designed to route all network connections through the I2P anonymity network. It follows the isolation principles of Whonix®, using a two-part virtual machine design:
 
-* **i2nix-Gateway**: A dedicated virtual machine that acts as a network router, forcing all traffic through I2P.
-* **i2nix-Workstation**: A completely isolated virtual machine for user applications, which can only connect to the internet via the Gateway.
+* **i2nix-gateway**: A dedicated virtual machine that acts as a network router, forcing all traffic through I2P.
+* **i2nix-workstation**: A completely isolated virtual machine for user applications, which can only connect to the internet via the Gateway.
 
 This guide provides the steps to build both components from scratch for a truly reproducible and transparent system.
 
@@ -41,7 +41,7 @@ This guide provides the steps to build both components from scratch for a truly 
     allow-hotplug enp1s0
     iface enp1s0 inet dhcp
 
-    # Internal interface for i2nix-Workstation (e.g., enp7s0)
+    # Internal interface for i2nix-workstation (e.g., enp7s0)
     auto enp7s0
     iface enp7s0 inet static
         address 10.152.152.10
@@ -69,7 +69,7 @@ This guide provides the steps to build both components from scratch for a truly 
 1.  **Configure I2P Tunnel**:
     * Using a text-based browser on the Gateway (e.g., `w3m`), navigate to the router console at `http://127.0.0.1:7657`.
     * Go to **"I2PTunnel"**.
-    * Modify the new **"HTTP Proxy"** client tunnel with these settings:
+    * Modify the **"HTTP Proxy"** client tunnel with these settings:
         * **Interface**: `10.152.152.10`
         * **Port**: `4444`
 
