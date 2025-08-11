@@ -68,14 +68,13 @@ This guide provides the steps to build both components from scratch for a truly 
 ### Step 2.4: Firewall & Transparent Proxying
 1.  **Configure I2P HTTP Proxy Tunnel**:
     * Using a text-based browser on the Gateway (e.g., `w3m`), navigate to the router console at `http://127.0.0.1:7657`.
-    * Go to **"I2PTunnel"**.
+    * Go to **"Hidden Service Manager"**.
     * Modify the **"HTTP Proxy"** client tunnel with these settings:
         * **Interface**: `10.152.152.10`
         * **Port**: `4444`
 
 2.  **Configure I2P SOCKS Proxy Tunnel**:
     * Using a text-based browser on the Gateway (e.g., `w3m`), navigate to the router console at `http://127.0.0.1:7657`.
-    * Go to **"I2PTunnel"**.
     * Create a new **"SOCKS 4/4a/5"** client tunnel with these settings:
         * **Name**: `i2nix-transproxy`
         * **Interface**: `10.152.152.10`
