@@ -28,7 +28,7 @@ This guide provides the steps to build both components from scratch for a truly 
 1.  Shut down the VM after installation. In `virt-manager`, configure two network adapters:
     * **Adapter 1 (External)**: Set to your default NAT or Bridged network. This is for I2P to connect to the internet.
     * **Adapter 2 (Internal)**: Create a new virtual network. Name it `i2nix` and set it to "Isolated network".
-2.  Start the VM and configure `/etc/network/interfaces`:
+2.  (Optional: run the [gateway-setup.sh](https://github.com/kn0sys/i2nix/blob/main/gateway-setup.sh) and proceed to Workstation setup) Start the VM and configure `/etc/network/interfaces`:
 
     ```bash
     # /etc/network/interfaces
@@ -127,7 +127,7 @@ This guide provides the steps to build both components from scratch for a truly 
 
 ### Step 3.2: Network Configuration
 1.  Shut down the VM. In `virt-manager`, configure a **single** network adapter set to the isolated `i2nix` virtual network.
-2.  Start the VM and configure a static IP.
+2.  (Optional: run the [gateway-setup.sh](https://github.com/kn0sys/i2nix/blob/main/gateway-setup.sh) and test Librewolf) Start the VM and configure a static IP.
     * Edit `/etc/network/interfaces`:
         ```bash
         # /etc/network/interfaces
