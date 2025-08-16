@@ -49,7 +49,7 @@ echo "[+] Installing I2P..."
 apt-get update
 apt-get install -y apt-transport-https curl gpg
 
-curl -o /tmp/i2p-repo-key.asc [https://geti2p.net/_static/idk.key.asc](https://geti2p.net/_static/idk.key.asc)
+curl -o /tmp/i2p-repo-key.asc https://geti2p.net/_static/idk.key.asc
 gpg --dearmor -o /usr/share/keyrings/i2p-archive-keyring.gpg /tmp/i2p-repo-key.asc
 echo "deb [signed-by=/usr/share/keyrings/i2p-archive-keyring.gpg] https://deb.i2p2.de/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/i2p.list
 
