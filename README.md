@@ -53,7 +53,7 @@ This guide provides the steps to build both components from scratch for a truly 
     ```bash
     sudo apt-get update
     sudo apt-get install apt-transport-https curl gpg
-    curl -o /tmp/i2p-repo-key.asc [https://geti2p.net/_static/idk.key.asc](https://geti2p.net/_static/idk.key.asc)
+    curl -o /tmp/i2p-repo-key.asc https://geti2p.net/_static/i2p-archive-keyring.gpg
     sudo gpg --dearmor -o /usr/share/keyrings/i2p-archive-keyring.gpg /tmp/i2p-repo-key.asc
     echo "deb [signed-by=/usr/share/keyrings/i2p-archive-keyring.gpg] https://deb.i2p.net/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/i2p.list
     ```
