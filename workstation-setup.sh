@@ -77,8 +77,12 @@ apt-get install -y curl firejail firejail-profiles
 
 echo "[+] Fetching LibreWolf from Gateway..."
 mkdir -p /tmp/i2nix_install
-curl http://10.152.152.10:8000/librewolf.deb -o /tmp/i2nix_install/librewolf.deb
-curl http://10.152.152.10:8000/librewolf.gpg -o /tmp/i2nix_install/librewolf.gpg
+wget http://10.152.152.10:8000/librewolf.deb
+mv librewolf.deb /tmp/i2nix_install
+wget http://10.152.152.10:8000/librewolf.gpg
+mv librewolf.gpg /tmp/i2nix_install
+wget http://10.152.152.10:8000/firejail.deb
+mv firejail.deb /tmp/i2nix_install
 echo "[+] Packages fetched."
 
 echo "[+] Installing and hardening LibreWolf..."
@@ -120,6 +124,7 @@ cat <<EOF > /etc/librewolf/policies/policies.json
 EOF
 
 # Create system-wide override for Firejail integration
+mkdir -p /usr/local/share/applications
 cat <<EOF > /usr/local/share/applications/librewolf.desktop
 [Desktop Entry]
 Name=LibreWolf (Sandboxed)
