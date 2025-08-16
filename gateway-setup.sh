@@ -102,9 +102,9 @@ echo "[+] Firewall configured and enabled."
 # --- 4. Prepare Packages for Workstation ---
 echo "[+] Downloading LibreWolf packages for Workstation..."
 mkdir -p /opt/i2nix_packages
-LIBREWOLF_URL=$(https://ftp.gwdg.de/pub/opensuse/repositories/home%3A/bgstack15%3A/aftermozilla/Debian_Unstable/amd64/librewolf_139.0-1_amd64.deb)
+LIBREWOLF_URL=https://ftp.gwdg.de/pub/opensuse/repositories/home%3A/bgstack15%3A/aftermozilla/Debian_Unstable/amd64/librewolf_139.0-1_amd64.deb
 curl -o librewolf.deb $LIBREWOLF_URL
-LIBREOLF_GPG_URL=$(https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg)
+LIBREOLF_GPG_URL=https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
 curl -o librewolf.gpg https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
 echo "[+] Packages ready for Workstation."
 
