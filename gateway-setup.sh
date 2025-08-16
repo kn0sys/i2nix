@@ -110,7 +110,7 @@ echo "[+] Packages ready for Workstation."
 
 LIBREWOLF_SHARE=/opt/i2nix-packages/
 
-mdir -p $LIBREWOLF_SHARE
+mkdir -p $LIBREWOLF_SHARE
 
 cp librewolf.deb $LIBREWOLF_SHARE
 cp librewolf.gpg $LIBREWOLF_SHARE
