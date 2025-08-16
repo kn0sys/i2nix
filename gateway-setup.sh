@@ -106,6 +106,8 @@ LIBREWOLF_URL=https://ftp.gwdg.de/pub/opensuse/repositories/home%3A/bgstack15%3A
 curl -o librewolf.deb $LIBREWOLF_URL
 LIBREOLF_GPG_URL=https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
 curl -o librewolf.gpg https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
+FIREJAIL_URL=https://netactuate.dl.sourceforge.net/project/firejail/firejail/firejail_0.9.74_1_amd64.deb?viasf=1
+curl -o firejail.deb $FIREJAIL_URL
 echo "[+] Packages ready for Workstation."
 
 LIBREWOLF_SHARE=/opt/i2nix-packages/
@@ -114,6 +116,7 @@ mkdir -p $LIBREWOLF_SHARE
 
 cp librewolf.deb $LIBREWOLF_SHARE
 cp librewolf.gpg $LIBREWOLF_SHARE
+cp firejail.deb $LIBREWOLF_SHARE
 
 # --- 5. Start a temporary web server to serve files to Workstation ---
 echo "[+] Starting temporary web server on port 8000..."
