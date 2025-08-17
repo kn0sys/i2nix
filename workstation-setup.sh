@@ -71,11 +71,9 @@ chmod +x /usr/local/bin/i2nix-timesync.sh
 echo "[+] System hardening applied."
 
 # --- 3. Install Software ---
-echo "[+] Installing core software..."
-apt-get update
-apt-get install -y curl firejail firejail-profiles
+echo "[+] Installing core software...
 
-echo "[+] Fetching LibreWolf from Gateway..."
+echo "[+] Fetching LibreWolf and Firejail from Gateway..."
 mkdir -p /tmp/i2nix_install
 wget http://10.152.152.10:8000/librewolf.deb
 mv librewolf.deb /tmp/i2nix_install
@@ -108,9 +106,10 @@ cat <<EOF > /etc/librewolf/policies/policies.json
     "Proxy": {
       "Mode": "manual",
       "Locked": true,
+      "HTTPProxy": "10.152.152.10:4444",
       "SOCKSProxy": "10.152.152.10:7667",
       "SOCKSVersion": 5,
-      "UseSOCKSProxyForAllProtocols": true,
+      "UseSOCKSProxyForAllProtocols": false,
       "ProxyDNS": true
     },
     "Preferences": {
