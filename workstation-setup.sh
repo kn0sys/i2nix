@@ -103,6 +103,10 @@ cat <<EOF > /etc/librewolf/policies/policies.json
     "DNSOverHTTPS": {
         "Enabled": false
     },
+    "Homepage": {
+      "StartPage": "homepage",
+      "URL": "http://stats.i2p"
+    },
     "Proxy": {
       "Mode": "manual",
       "Locked": true,
