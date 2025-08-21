@@ -7,6 +7,7 @@
 #
 # Run as root: sudo ./gateway-setup.sh
 #
+GATEWAY_INTERNAL_IP="10.152.152.10"
 
 set -e
 
@@ -37,7 +38,7 @@ iface $EXTERNAL_IF inet dhcp
 # Internal interface for i2nix-workstation
 auto $INTERNAL_IF
 iface $INTERNAL_IF inet static
-    address 10.152.152.10
+    address $GATEWAY_INTERNAL_IP
     netmask 255.255.255.0
 EOF
 
@@ -66,8 +67,34 @@ echo "[+] Configuring I2P and Firewall..."
 sleep 15 # Give I2P time to start and create initial configs
 I2P_USER=$(ps -o user= -p $(pidof java)) # Find the user I2P is running as
 I2P_CONFIG_DIR="/home/$I2P_USER/.i2p"
-sed -i 's/127.0.0.1/10.152.152.10/g' $I2P_CONFIG_DIR/clients.config.d/i2p-http-proxy.config || true
-sed -i 's/127.0.0.1/10.152.152.10/g' $I2P_CONFIG_DIR/clients.config.d/i2p-socks-proxy.config || true
+cat <<EOF > $I2P_CONFIG_DIR/'00-I2P HTTP Proxy-i2ptunnel.config'
+# NOTE: This I2P config file must use UTF-8 encoding
+# Last saved: Sep 23, 2022, 4:31 PM
+configFile=/home/user/.i2p/i2ptunnel.config.d/00-I2P HTTP Proxy-i2ptunnel.config
+description=HTTP proxy for browsing eepsites and the web
+i2cpHost=127.0.0.1
+i2cpPort=7654
+interface=$GATEWAY_INTERNAL_IP
+listenPort=4444
+name=I2P HTTP Proxy
+option.i2cp.leaseSetEncType=4,0
+option.i2cp.reduceIdleTime=900000
+option.i2cp.reduceOnIdle=true
+option.i2cp.reduceQuantity=1
+option.i2p.streaming.connectDelay=1000
+option.i2ptunnel.httpclient.SSLOutproxies=exit.storymcloud.i2p
+option.inbound.length=3
+option.inbound.lengthVariance=0
+option.inbound.nickname=shared clients
+option.outbound.length=3
+option.outbound.lengthVariance=0
+option.outbound.nickname=shared clients
+option.outbound.priority=10
+proxyList=exit.stormycloud.i2p
+sharedClient=true
+startOnLoad=true
+type=httpclient
+EOF
 
 # Install and configure iptables
 # Pre-seed debconf to auto-accept iptables-persistent prompts
@@ -77,7 +104,6 @@ apt-get install -y iptables-persistent
 
 # Define firewall variables
 I2NIX_WORKSTATION="10.152.152.11"
-GATEWAY_INTERNAL_IP="10.152.152.10"
 I2P_DNS_PORT="7653"
 I2P_TRANS_PORT="7654" # I2P's default transparent proxy port
 
