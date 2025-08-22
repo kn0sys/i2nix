@@ -18,6 +18,9 @@ fi
 
 echo "### Starting i2nix-workstation Configuration ###"
 
+echo "### Installing XFCE Desktop###"
+apt-get install -y task-xfce-desktop
+
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
 # IMPORTANT: Verify your interface name with `ip a`.

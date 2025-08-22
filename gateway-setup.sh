@@ -21,6 +21,7 @@ echo "### Starting i2nix-gateway Configuration ###"
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
+apt-get install -y jq
 # IMPORTANT: Verify your interface names with `ip a`.
 # enp1s0 = External (NAT/Bridged), enp7s0 = Internal (i2nix)
 EXTERNAL_IF=$(ip -j a | jq .[1].ifname)
@@ -69,7 +70,7 @@ I2P_USER=$(ps -o user= -p $(pidof java)) # Find the user I2P is running as
 I2P_CONFIG_DIR="/home/$I2P_USER/.i2p"
 cat <<EOF > $I2P_CONFIG_DIR/'00-I2P HTTP Proxy-i2ptunnel.config'
 # NOTE: This I2P config file must use UTF-8 encoding
-# Last saved: Sep 23, 2022, 4:31 PM
+# Last saved: $(date --utc)
 configFile=/home/user/.i2p/i2ptunnel.config.d/00-I2P HTTP Proxy-i2ptunnel.config
 description=HTTP proxy for browsing eepsites and the web
 i2cpHost=127.0.0.1
