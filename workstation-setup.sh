@@ -24,7 +24,7 @@ apt-get install -y task-xfce-desktop jq
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
 # IMPORTANT: Verify your interface name with `ip a`.
-INTERNAL_IF=$(ip -j a | jq .[1].ifname)
+INTERNAL_IF=$(ip -j a | jq .[1].ifname | tr -d '"')
 
 cat <<EOF > /etc/network/interfaces
 source /etc/network/interfaces.d/*

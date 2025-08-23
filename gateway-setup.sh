@@ -24,8 +24,8 @@ echo "[+] Configuring network interfaces..."
 apt-get install -y jq
 # IMPORTANT: Verify your interface names with `ip a`.
 # enp1s0 = External (NAT/Bridged), enp7s0 = Internal (i2nix)
-EXTERNAL_IF=$(ip -j a | jq .[1].ifname)
-INTERNAL_IF=$(ip -j a | jq .[2].ifname)
+EXTERNAL_IF=$(ip -j a | jq .[1].ifname | tr -d '"')
+INTERNAL_IF=$(ip -j a | jq .[2].ifname | tr -d '"')
 
 cat <<EOF > /etc/network/interfaces
 source /etc/network/interfaces.d/*

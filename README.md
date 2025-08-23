@@ -2,7 +2,7 @@
 
 # Installation
 
-For automated installer see [install.md](`./install.md`).
+For automated installer see [install.md](https://github.com/kn0sys/i2nix/blob/main/install.md).
 
 # i2nix: Reproducible Build Guide
 **Version 1.0 (2025-08-10)**
