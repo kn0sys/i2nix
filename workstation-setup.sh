@@ -19,7 +19,7 @@ fi
 echo "### Starting i2nix-workstation Configuration ###"
 
 echo "### Installing XFCE Desktop###"
-apt-get install -y task-xfce-desktop
+apt-get install -y task-xfce-desktop jq
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
@@ -74,7 +74,7 @@ chmod +x /usr/local/bin/i2nix-timesync.sh
 echo "[+] System hardening applied."
 
 # --- 3. Install Software ---
-echo "[+] Installing core software...
+echo "[+] Installing core software..."
 
 echo "[+] Fetching LibreWolf and Firejail from Gateway..."
 mkdir -p /tmp/i2nix_install

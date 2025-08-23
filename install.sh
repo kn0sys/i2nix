@@ -34,6 +34,7 @@ virt-install \
   --disk path=/var/lib/libvirt/images/i2nix-gateway.qcow2,size=4 \
   --os-variant debian13 \
   --network bridge=virbr0,model=virtio \
+  --network network=default,model=virtio \
   --graphics none \
   --console pty,target_type=serial \
   --location "$PWD/$ISO_FILENAME" \

@@ -1,5 +1,9 @@
 ![i2nix](i2nix.png) 
 
+# Installation
+
+For automated installer see [install.md](`./install.md`).
+
 # i2nix: Reproducible Build Guide
 **Version 1.0 (2025-08-10)**
 
