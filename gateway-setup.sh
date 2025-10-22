@@ -46,19 +46,20 @@ EOF
 systemctl restart networking
 echo "[+] Network interfaces configured."
 
+# TODO: Migration to i2pd
+
 # --- 2. I2P Installation ---
 echo "[+] Installing I2P..."
 apt-get update
-apt-get install -y apt-transport-https curl gpg
+apt-get install -y apt-transport-https curl wget gpg
 
-curl -o /tmp/i2p-repo-key.asc https://geti2p.net/_static/i2p-archive-keyring.gpg
+wget -q -O - https://repo.i2pd.xyz/.help/add_repo | sudo bash -s -
 gpg --dearmor -o /usr/share/keyrings/i2p-archive-keyring.gpg /tmp/i2p-repo-key.asc
-echo "deb [signed-by=/usr/share/keyrings/i2p-archive-keyring.gpg] https://deb.i2p.net/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/i2p.list
 
 apt-get update
-apt-get install -y i2p i2p-keyring
-systemctl enable i2p
-echo "[+] I2P installed."
+apt-get install -y i2pd
+systemctl enable i2pd
+echo "[+] i2pd installed."
 
 # --- 3. Firewall and Transparent Proxying ---
 echo "[+] Configuring I2P and Firewall..."
@@ -66,35 +67,20 @@ echo "[+] Configuring I2P and Firewall..."
 # This is a bit of a hack, assumes the user-specific config file exists after first run.
 # A more robust solution might use I2P's config update mechanisms.
 sleep 15 # Give I2P time to start and create initial configs
-I2P_USER=$(ps -o user= -p $(pidof java)) # Find the user I2P is running as
-I2P_CONFIG_DIR="/home/$I2P_USER/.i2p"
-cat <<EOF > $I2P_CONFIG_DIR/'00-I2P HTTP Proxy-i2ptunnel.config'
-# NOTE: This I2P config file must use UTF-8 encoding
-# Last saved: $(date --utc)
-configFile=/home/user/.i2p/i2ptunnel.config.d/00-I2P HTTP Proxy-i2ptunnel.config
-description=HTTP proxy for browsing eepsites and the web
-i2cpHost=127.0.0.1
-i2cpPort=7654
-interface=$GATEWAY_INTERNAL_IP
-listenPort=4444
-name=I2P HTTP Proxy
-option.i2cp.leaseSetEncType=4,0
-option.i2cp.reduceIdleTime=900000
-option.i2cp.reduceOnIdle=true
-option.i2cp.reduceQuantity=1
-option.i2p.streaming.connectDelay=1000
-option.i2ptunnel.httpclient.SSLOutproxies=exit.storymcloud.i2p
-option.inbound.length=3
-option.inbound.lengthVariance=0
-option.inbound.nickname=shared clients
-option.outbound.length=3
-option.outbound.lengthVariance=0
-option.outbound.nickname=shared clients
-option.outbound.priority=10
-proxyList=exit.stormycloud.i2p
-sharedClient=true
-startOnLoad=true
-type=httpclient
+I2P_USER=$(ps -o user= -p $(pidof i2pd)) # Find the user I2P is running as
+I2P_CONFIG_DIR="/home/$I2P_USER/.i2pd"
+cat <<EOF > $I2P_CONFIG_DIR/'tunnels.conf'
+[alt-http-proxy]
+type = httpproxy
+address = $GATEWAY_INTERNAL_IP
+port = 8444
+keys = http-keys.dat
+
+[alt-socks]
+type = socks
+address = $GATEWAY_INTERNAL_IP
+port = 7667
+keys = socks-keys.dat 
 EOF
 
 # Install and configure iptables

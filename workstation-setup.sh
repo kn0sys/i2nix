@@ -113,7 +113,7 @@ cat <<EOF > /etc/librewolf/policies/policies.json
     "Proxy": {
       "Mode": "manual",
       "Locked": true,
-      "HTTPProxy": "10.152.152.10:4444",
+      "HTTPProxy": "10.152.152.10:8444",
       "SOCKSProxy": "10.152.152.10:7667",
       "SOCKSVersion": 5,
       "UseSOCKSProxyForAllProtocols": false,

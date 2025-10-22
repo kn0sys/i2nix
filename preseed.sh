@@ -49,7 +49,7 @@ d-i partman/confirm_nooverwrite boolean true
 tasksel tasksel/first multiselect standard
 d-i pkgsel/include string openssh-server sudo qemu-guest-agent
 
-# --- Bootloader Configuration (NEW SECTION) ---
+# --- Bootloader Configuration ---
 # This is the key to automating the GRUB installation prompt.
 d-i grub-installer/bootdev string /dev/vda
 d-i grub-pc/install_devices string /dev/vda

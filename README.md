@@ -52,7 +52,7 @@ This guide provides the steps to build both components from scratch for a truly 
         netmask 255.255.255.0
     ```
 
-### Step 2.3: I2P Installation
+### Step 2.3: I2P Installation (TODO: Migrate to i2pd)
 1.  Add the I2P repository:
     ```bash
     sudo apt-get update
