@@ -16,7 +16,7 @@ i2nix is a security-focused Linux operating system designed to route all network
 This guide provides the steps to build both components from scratch for a truly reproducible and transparent system.
 
 ### Prerequisites
-* A Linux host machine with KVM/QEMU and `virt-manager` installed.
+* A Linux host machine with KVM/QEMU and `virt-manager, libvirt, virsh, virt-install` installed.
 * A Debian net-installer ISO (e.g., `debian-12-netinst.iso`).
 * Basic familiarity with the Linux command line and `virt-manager`.
 

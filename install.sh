@@ -10,9 +10,9 @@ for cmd in virt-install virsh wget mkpasswd; do
 done
 
 # --- Download Debian 13 ISO ---
-ISO_FILENAME="debian-13.0.0-amd64-netinst.iso"
+ISO_FILENAME="debian-13.1.0-amd64-netinst.iso"
 if [ ! -f "$ISO_FILENAME" ]; then
-    FULL_URL="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.0.0-amd64-netinst.iso"
+    FULL_URL="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/$ISO_FILENAME"
     echo "Downloading Debian 13 netinst ISO..."
     wget -O "$ISO_FILENAME" "$FULL_URL"
     echo "Download complete: $ISO_FILENAME"
