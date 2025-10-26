@@ -54,7 +54,6 @@ apt-get update
 apt-get install -y apt-transport-https curl wget gpg
 
 wget -q -O - https://repo.i2pd.xyz/.help/add_repo | sudo bash -s -
-gpg --dearmor -o /usr/share/keyrings/i2p-archive-keyring.gpg /tmp/i2p-repo-key.asc
 
 apt-get update
 apt-get install -y i2pd
@@ -67,8 +66,9 @@ echo "[+] Configuring I2P and Firewall..."
 # This is a bit of a hack, assumes the user-specific config file exists after first run.
 # A more robust solution might use I2P's config update mechanisms.
 sleep 15 # Give I2P time to start and create initial configs
-I2P_USER=$(ps -o user= -p $(pidof i2pd)) # Find the user I2P is running as
-I2P_CONFIG_DIR="/home/$I2P_USER/.i2pd"
+I2P_CONFIG_DIR="/home/i2nix/.i2pd"
+mkdir -p $I2P_CONFIG_DIR
+touch "$I2P_CONFIG_DIR/tunnels.conf"
 cat <<EOF > $I2P_CONFIG_DIR/'tunnels.conf'
 [alt-http-proxy]
 type = httpproxy
@@ -134,9 +134,5 @@ cp firejail.deb $LIBREWOLF_SHARE
 # --- 5. Start a temporary web server to serve files to Workstation ---
 echo "[+] Starting temporary web server on port 8000..."
 echo "--> On the Workstation, run the setup script. It will pull files from here."
-
-# Kill the webserver used to pull Librewolf to Workstation after 5 minutes.
-(cd /opt/i2nix_packages && timeout 5m python3 -m http.server 8000) &
-
 echo "### i2nix-gateway Configuration COMPLETE ###"
-echo "### The web server will automatically shut down in 5 minutes. ###"
+

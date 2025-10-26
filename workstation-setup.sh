@@ -19,7 +19,8 @@ fi
 echo "### Starting i2nix-workstation Configuration ###"
 
 echo "### Installing XFCE Desktop###"
-apt-get install -y task-xfce-desktop jq
+apt update
+apt install -y xfce4 lightdm jq
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
@@ -77,13 +78,14 @@ echo "[+] System hardening applied."
 echo "[+] Installing core software..."
 
 echo "[+] Fetching LibreWolf and Firejail from Gateway..."
-mkdir -p /tmp/i2nix_install
-wget http://10.152.152.10:8000/librewolf.deb
-mv librewolf.deb /tmp/i2nix_install
-wget http://10.152.152.10:8000/librewolf.gpg
-mv librewolf.gpg /tmp/i2nix_install
-wget http://10.152.152.10:8000/firejail.deb
-mv firejail.deb /tmp/i2nix_install
+# TODO: use 'scp' to pull packages from gateway
+#mkdir -p /tmp/i2nix_install
+#wget http://10.152.152.10:8000/librewolf.deb
+#mv librewolf.deb /tmp/i2nix_install
+#wget http://10.152.152.10:8000/librewolf.gpg
+#mv librewolf.gpg /tmp/i2nix_install
+#wget http://10.152.152.10:8000/firejail.deb
+#mv firejail.deb /tmp/i2nix_install
 echo "[+] Packages fetched."
 
 echo "[+] Installing and hardening LibreWolf..."
@@ -150,3 +152,4 @@ echo "[+] LibreWolf installed and hardened."
 echo ""
 echo "### i2nix-workstation Configuration COMPLETE ###"
 echo "### It is highly recommended to REBOOT the system now. ###"
+
