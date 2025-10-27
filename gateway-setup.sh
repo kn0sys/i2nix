@@ -131,8 +131,5 @@ cp librewolf.deb $LIBREWOLF_SHARE
 cp librewolf.gpg $LIBREWOLF_SHARE
 cp firejail.deb $LIBREWOLF_SHARE
 
-# --- 5. Start a temporary web server to serve files to Workstation ---
-echo "[+] Starting temporary web server on port 8000..."
-echo "--> On the Workstation, run the setup script. It will pull files from here."
 echo "### i2nix-gateway Configuration COMPLETE ###"
 
