@@ -27,7 +27,7 @@ echo "[+] Configuring network interfaces..."
 # IMPORTANT: Verify your interface name with `ip a`.
 INTERNAL_IF=$(ip -j a | jq .[1].ifname | tr -d '"')
 
-GATEWAY_IP=WORKSTATION_IP=$(arp -e | grep $(virsh -c qemu:///system net-dhcp-leases default | grep i2nix-workstation | awk '{print $3}') | awk '{print $1}')
+GATEWAY_IP=$1
 
 cat <<EOF > /etc/network/interfaces
 source /etc/network/interfaces.d/*
