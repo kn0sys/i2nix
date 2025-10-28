@@ -18,7 +18,7 @@ fi
 
 echo "### Starting i2nix-workstation Configuration ###"
 
-echo "### Installing XFCE Desktop###"
+echo "### Installing XFCE Desktop ###"
 apt update
 apt install -y xfce4 lightdm jq
 
@@ -26,6 +26,8 @@ apt install -y xfce4 lightdm jq
 echo "[+] Configuring network interfaces..."
 # IMPORTANT: Verify your interface name with `ip a`.
 INTERNAL_IF=$(ip -j a | jq .[1].ifname | tr -d '"')
+
+GATEWAY_IP=WORKSTATION_IP=$(arp -e | grep $(virsh -c qemu:///system net-dhcp-leases default | grep i2nix-workstation | awk '{print $3}') | awk '{print $1}')
 
 cat <<EOF > /etc/network/interfaces
 source /etc/network/interfaces.d/*
@@ -38,11 +40,11 @@ auto $INTERNAL_IF
 iface $INTERNAL_IF inet static
     address 10.152.152.11
     netmask 255.255.255.0
-    gateway 10.152.152.10
+    gateway $GATEWAY_IP
 EOF
 
 # Configure DNS
-echo "nameserver 10.152.152.10" > /etc/resolv.conf
+echo "nameserver $GATEWAY_IP" > /etc/resolv.conf
 
 systemctl restart networking
 echo "[+] Network interfaces configured."
@@ -78,14 +80,7 @@ echo "[+] System hardening applied."
 echo "[+] Installing core software..."
 
 echo "[+] Fetching LibreWolf and Firejail from Gateway..."
-# TODO: use 'scp' to pull packages from gateway
-#mkdir -p /tmp/i2nix_install
-#wget http://10.152.152.10:8000/librewolf.deb
-#mv librewolf.deb /tmp/i2nix_install
-#wget http://10.152.152.10:8000/librewolf.gpg
-#mv librewolf.gpg /tmp/i2nix_install
-#wget http://10.152.152.10:8000/firejail.deb
-#mv firejail.deb /tmp/i2nix_install
+scp -r i2nix@$GATEWAY_IP:/opt/i2nix_packages/ /tmp/i2nix_install
 echo "[+] Packages fetched."
 
 echo "[+] Installing and hardening LibreWolf..."
@@ -115,8 +110,8 @@ cat <<EOF > /etc/librewolf/policies/policies.json
     "Proxy": {
       "Mode": "manual",
       "Locked": true,
-      "HTTPProxy": "10.152.152.10:8444",
-      "SOCKSProxy": "10.152.152.10:7667",
+      "HTTPProxy": "$GATEWAY_IP:8444",
+      "SOCKSProxy": "$GATEWAY_IP:7667",
       "SOCKSVersion": 5,
       "UseSOCKSProxyForAllProtocols": false,
       "ProxyDNS": true
