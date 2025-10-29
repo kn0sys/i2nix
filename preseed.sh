@@ -45,9 +45,8 @@ d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
 
 # --- Package selection ---
-# Add xfce4 for the workstation installer later if needed, but for now, keep it minimal.
 tasksel tasksel/first multiselect standard
-d-i pkgsel/include string openssh-server sudo qemu-guest-agent
+d-i pkgsel/include string openssh-server sudo qemu-guest-agent xfce4 lightdm git
 
 # --- Bootloader Configuration ---
 # This is the key to automating the GRUB installation prompt.

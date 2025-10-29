@@ -66,11 +66,11 @@ echo "[+] Configuring I2P and Firewall..."
 # This is a bit of a hack, assumes the user-specific config file exists after first run.
 # A more robust solution might use I2P's config update mechanisms.
 sleep 15 # Give I2P time to start and create initial configs
-I2P_CONFIG_DIR="/home/i2nix/.i2pd"
+I2P_CONFIG_DIR="/etc/.i2pd"
 mkdir -p $I2P_CONFIG_DIR
 touch "$I2P_CONFIG_DIR/tunnels.conf"
 cat <<EOF > $I2P_CONFIG_DIR/'tunnels.conf'
-[alt-http-proxy]
+[httpproxy]
 type = httpproxy
 address = $GATEWAY_INTERNAL_IP
 port = 8444
@@ -79,7 +79,7 @@ keys = http-keys.dat
 [alt-socks]
 type = socks
 address = $GATEWAY_INTERNAL_IP
-port = 7667
+port = 8667
 keys = socks-keys.dat 
 EOF
 

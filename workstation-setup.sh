@@ -111,7 +111,7 @@ cat <<EOF > /etc/librewolf/policies/policies.json
       "Mode": "manual",
       "Locked": true,
       "HTTPProxy": "$GATEWAY_IP:8444",
-      "SOCKSProxy": "$GATEWAY_IP:7667",
+      "SOCKSProxy": "$GATEWAY_IP:8667",
       "SOCKSVersion": 5,
       "UseSOCKSProxyForAllProtocols": false,
       "ProxyDNS": true

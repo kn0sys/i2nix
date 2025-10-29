@@ -51,7 +51,7 @@ virt-install \
   --disk path=/var/lib/libvirt/images/i2nix-workstation.qcow2,size=8 \
   --os-variant debian13 \
   --network bridge=virbr0,model=virtio \
-  --graphics none \
+  --graphics spice \
   --console pty,target_type=serial \
   --location "$PWD/$ISO_FILENAME" \
   --initrd-inject workstation-preseed.cfg \
@@ -73,7 +73,7 @@ if [ -z "$GATEWAY_IP" ]; then
 fi
 echo "Gateway IP is $GATEWAY_IP"
 ssh-keyscan "$GATEWAY_IP" >> ~/.ssh/known_hosts
-ssh i2nix@"$GATEWAY_IP" "sudo apt-get update && sudo apt-get install -y git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x gateway-setup.sh && sudo ./gateway-setup.sh"
+ssh i2nix@"$GATEWAY_IP" "git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x gateway-setup.sh && sudo ./gateway-setup.sh"
 
 # --- Configure Workstation ---
 echo "Starting and configuring Workstation..."
@@ -87,7 +87,7 @@ if [ -z "$WORKSTATION_IP" ]; then
 fi
 echo "Workstation IP is $WORKSTATION_IP"
 ssh-keyscan "$WORKSTATION_IP" >> ~/.ssh/known_hosts
-ssh i2nix@"$WORKSTATION_IP" "sudo apt-get update && sudo apt-get install -y git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_IP && sudo reboot"
+ssh i2nix@"$WORKSTATION_IP" "git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_IP && sudo reboot"
 
 echo "i2nix installation complete. Launching workstation console."
 # Clean up preseed file
