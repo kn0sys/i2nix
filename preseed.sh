@@ -46,7 +46,7 @@ d-i partman/confirm_nooverwrite boolean true
 
 # --- Package selection ---
 tasksel tasksel/first multiselect standard
-d-i pkgsel/include string openssh-server sudo qemu-guest-agent git xserver-xorg-video-all xserver-xorg-input-all xfce lightdm
+d-i pkgsel/include string openssh-server sudo qemu-guest-agent
 
 # --- Bootloader Configuration ---
 # This is the key to automating the GRUB installation prompt.

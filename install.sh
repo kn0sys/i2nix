@@ -87,7 +87,7 @@ if [ -z "$WORKSTATION_IP" ]; then
 fi
 echo "Workstation IP is $WORKSTATION_IP"
 ssh-keyscan "$WORKSTATION_IP" >> ~/.ssh/known_hosts
-ssh i2nix@"$WORKSTATION_IP" "git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_IP && sudo reboot"
+ssh i2nix@"$WORKSTATION_IP" "sudo apt update -y && sudo apt install -y xserver-xorg-video-all xserver-xorg-input-all x11-xserver-utils x11-utils xinit xfce4 lightdm git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_IP && sudo reboot"
 
 echo "i2nix installation complete. Launching workstation console."
 # Clean up preseed file
