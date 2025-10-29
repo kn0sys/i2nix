@@ -29,9 +29,9 @@ echo "Creating preseed.cfg files..."
 echo "Installing i2nix-gateway VM... This will take some time."
 virt-install \
   --name i2nix-gateway \
-  --ram 1024 \
+  --ram 2048 \
   --vcpus 1 \
-  --disk path=/var/lib/libvirt/images/i2nix-gateway.qcow2,size=4 \
+  --disk path=/var/lib/libvirt/images/i2nix-gateway.qcow2,size=8 \
   --os-variant debian13 \
   --network bridge=virbr0,model=virtio \
   --network network=default,model=virtio \
@@ -46,12 +46,12 @@ virt-install \
 echo "Installing i2nix-workstation VM... This will take some time."
 virt-install \
   --name i2nix-workstation \
-  --ram 2048 \
+  --ram 4096 \
   --vcpus 2 \
-  --disk path=/var/lib/libvirt/images/i2nix-workstation.qcow2,size=8 \
+  --disk path=/var/lib/libvirt/images/i2nix-workstation.qcow2,size=16 \
   --os-variant debian13 \
   --network bridge=virbr0,model=virtio \
-  --graphics spice \
+  --graphics none \
   --console pty,target_type=serial \
   --location "$PWD/$ISO_FILENAME" \
   --initrd-inject workstation-preseed.cfg \
