@@ -21,7 +21,8 @@ echo "### Starting i2nix-gateway Configuration ###"
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
-apt-get install -y jq
+apt update -y
+apt install -y jq
 # IMPORTANT: Verify your interface names with `ip a`.
 # enp1s0 = External (NAT/Bridged), enp7s0 = Internal (i2nix)
 EXTERNAL_IF=$(ip -j a | jq .[1].ifname | tr -d '"')
@@ -55,8 +56,8 @@ apt-get install -y apt-transport-https curl wget gpg
 
 wget -q -O - https://repo.i2pd.xyz/.help/add_repo | sudo bash -s -
 
-apt-get update
-apt-get install -y i2pd
+apt update -y
+apt install -y i2pd
 systemctl enable i2pd
 echo "[+] i2pd installed."
 
@@ -66,7 +67,7 @@ echo "[+] Configuring I2P and Firewall..."
 # This is a bit of a hack, assumes the user-specific config file exists after first run.
 # A more robust solution might use I2P's config update mechanisms.
 sleep 15 # Give I2P time to start and create initial configs
-I2P_CONFIG_DIR="/etc/.i2pd"
+I2P_CONFIG_DIR="/etc/i2pd"
 mkdir -p $I2P_CONFIG_DIR
 touch "$I2P_CONFIG_DIR/tunnels.conf"
 cat <<EOF > $I2P_CONFIG_DIR/'tunnels.conf'
