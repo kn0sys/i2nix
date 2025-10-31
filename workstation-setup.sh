@@ -49,18 +49,19 @@ echo "nameserver $GATEWAY_IP" > /etc/resolv.conf
 systemctl restart networking
 echo "[+] Network interfaces configured."
 
+# TODO: Debug kernel hardening
 # --- 2. System Hardening ---
 echo "[+] Applying system hardening..."
 # Kernel Hardening
-cat <<EOF > /etc/sysctl.d/99-i2nix-hardening.conf
-kernel.kptr_restrict=2
-kernel.dmesg_restrict=1
-kernel.unprivileged_userns_clone=0
-kernel.unprivileged_bpf_disabled=1
-net.ipv4.tcp_syncookies=1
-net.ipv4.icmp_echo_ignore_broadcasts=1
-EOF
-sysctl --system
+ #cat <<EOF > /etc/sysctl.d/99-i2nix-hardening.conf
+ #kernel.kptr_restrict=2
+ #kernel.dmesg_restrict=1
+ #kernel.unprivileged_userns_clone=0
+ #kernel.unprivileged_bpf_disabled=1
+ #net.ipv4.tcp_syncookies=1
+ #net.ipv4.icmp_echo_ignore_broadcasts=1
+ #EOF
+ #sysctl --system
 
 # Time Sync Script
 cat <<'EOF' > /usr/local/bin/i2nix-timesync.sh

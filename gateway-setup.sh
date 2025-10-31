@@ -124,7 +124,7 @@ FIREJAIL_URL=https://netactuate.dl.sourceforge.net/project/firejail/firejail/fir
 curl -o firejail.deb $FIREJAIL_URL
 echo "[+] Packages ready for Workstation."
 
-LIBREWOLF_SHARE=/opt/i2nix-packages/
+LIBREWOLF_SHARE=/opt/i2nix_packages/
 
 mkdir -p $LIBREWOLF_SHARE
 
