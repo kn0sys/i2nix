@@ -18,9 +18,8 @@ fi
 
 echo "### Starting i2nix-workstation Configuration ###"
 
-echo "### Installing XFCE Desktop ###"
 apt update -y
-apt install -y xfce4 lightdm jq
+apt install -y jq
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
