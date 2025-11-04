@@ -58,7 +58,7 @@ virt-install \
   --console pty,target_type=serial \
   --location "$PWD/$ISO_FILENAME" \
   --initrd-inject workstation-preseed.cfg \
-  --extra-args="hostname=i2nix-workstation auto=true priority=critical preseed/file=/workstation-preseed.cfg console=ttyS0,115200n8" \
+  --extra-args="hostname=i2nix-workstation auto=true priority=critical preseed/file=/workstation-preseed.cfg console=ttyS0,115200n8 desktop=xfce" \
   --wait -1
 
 echo "Both VMs have been installed."
