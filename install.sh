@@ -9,6 +9,9 @@ for cmd in virt-install virsh wget mkpasswd; do
     fi
 done
 
+# IP for GATEWAY SSH
+GATEWAY_SSH=10.152.152.10
+
 # --- Download Debian 13 ISO ---
 ISO_FILENAME="debian-13.1.0-amd64-netinst.iso"
 if [ ! -f "$ISO_FILENAME" ]; then
@@ -87,7 +90,7 @@ if [ -z "$WORKSTATION_IP" ]; then
 fi
 echo "Workstation IP is $WORKSTATION_IP"
 ssh-keyscan "$WORKSTATION_IP" >> ~/.ssh/known_hosts
-ssh i2nix@"$WORKSTATION_IP" "sudo apt update -y && sudo apt install -y task-xfce-desktop lightdm git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_IP && sudo reboot"
+ssh i2nix@"$WORKSTATION_IP" "sudo apt update -y && sudo apt install -y git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_SSH  && sudo reboot"
 
 echo "i2nix installation complete. Launching workstation console."
 # Clean up preseed file

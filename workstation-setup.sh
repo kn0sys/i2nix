@@ -19,7 +19,7 @@ fi
 echo "### Starting i2nix-workstation Configuration ###"
 
 apt update -y
-apt install -y jq
+apt install -y jq task-xfce-desktop
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
@@ -45,7 +45,6 @@ EOF
 # Configure DNS
 echo "nameserver $GATEWAY_IP" > /etc/resolv.conf
 
-systemctl restart networking
 echo "[+] Network interfaces configured."
 
 # TODO: Debug kernel hardening

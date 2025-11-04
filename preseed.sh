@@ -45,7 +45,7 @@ d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
 
 # --- Package selection ---
-tasksel tasksel/first multiselect standard, xfce-desktop
+tasksel tasksel/first multiselect standard
 d-i pkgsel/include string openssh-server sudo qemu-guest-agent
 
 # --- Bootloader Configuration ---

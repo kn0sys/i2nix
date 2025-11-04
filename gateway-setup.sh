@@ -57,7 +57,8 @@ apt-get install -y apt-transport-https curl wget gpg
 wget -q -O - https://repo.i2pd.xyz/.help/add_repo | sudo bash -s -
 
 apt update -y
-apt install -y i2pd
+apt install -y i2pd ufw
+ufw enable
 systemctl enable i2pd
 echo "[+] i2pd installed."
 
@@ -111,6 +112,10 @@ iptables -A FORWARD -i $INTERNAL_IF -d $GATEWAY_INTERNAL_IP -j ACCEPT
 
 # Save the rules to make them persistent
 netfilter-persistent save
+
+# Punch a hole for Workstation package installation
+ufw allow from 10.152.152.11 to any port 22 proto tcp
+ufw status
 echo "[+] Firewall configured and enabled."
 
 # --- 4. Prepare Packages for Workstation ---
