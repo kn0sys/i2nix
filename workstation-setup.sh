@@ -8,6 +8,8 @@
 # Run as root: sudo ./workstation-setup.sh
 #
 
+# TODO: Configure desktop environment
+
 set -e
 
 # --- Safety Check ---
@@ -19,7 +21,7 @@ fi
 echo "### Starting i2nix-workstation Configuration ###"
 
 apt update -y
-apt install -y jq task-xfce-desktop
+apt install -y jq
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
@@ -88,6 +90,8 @@ gpg --dearmor -o /usr/share/keyrings/librewolf.gpg /tmp/i2nix_install/librewolf.
 dpkg -i /tmp/i2nix_install/librewolf.deb || apt-get -f install -y
 rm -rf /tmp/i2nix_install
 
+# Set lynx http proxy
+sh -c 'echo "http_proxy=http://10.152.152.10:8444" >> /etc/lynx/lynx.cfg'
 # Create system-wide policies for hardening (the professional way)
 mkdir -p /etc/librewolf/policies/
 cat <<EOF > /etc/librewolf/policies/policies.json

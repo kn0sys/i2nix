@@ -47,8 +47,6 @@ EOF
 systemctl restart networking
 echo "[+] Network interfaces configured."
 
-# TODO: Migration to i2pd
-
 # --- 2. I2P Installation ---
 echo "[+] Installing I2P..."
 apt-get update
@@ -57,8 +55,7 @@ apt-get install -y apt-transport-https curl wget gpg
 wget -q -O - https://repo.i2pd.xyz/.help/add_repo | sudo bash -s -
 
 apt update -y
-apt install -y i2pd ufw
-ufw enable
+apt install -y i2pd
 systemctl enable i2pd
 echo "[+] i2pd installed."
 
@@ -110,12 +107,12 @@ iptables -t nat -A PREROUTING -i $INTERNAL_IF -p tcp --syn -j DNAT --to $GATEWAY
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $INTERNAL_IF -d $GATEWAY_INTERNAL_IP -j ACCEPT
 
+# Allow workstation ssh access to pull packages
+iptables -A INPUT -p tcp -s $I2NIX_WORKSTATION --dport 22 -j ACCEPT
+
 # Save the rules to make them persistent
 netfilter-persistent save
 
-# Punch a hole for Workstation package installation
-ufw allow from 10.152.152.11 to any port 22 proto tcp
-ufw status
 echo "[+] Firewall configured and enabled."
 
 # --- 4. Prepare Packages for Workstation ---
