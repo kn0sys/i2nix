@@ -21,7 +21,7 @@ fi
 echo "### Starting i2nix-workstation Configuration ###"
 
 apt update -y
-apt install -y jq
+apt install -y jq lynx
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
