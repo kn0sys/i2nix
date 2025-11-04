@@ -52,75 +52,74 @@ This guide provides the steps to build both components from scratch for a truly 
         netmask 255.255.255.0
     ```
 
-### Step 2.3: I2P Installation (TODO: Migrate to i2pd)
-1.  Add the I2P repository:
-    ```bash
-    sudo apt-get update
-    sudo apt-get install apt-transport-https curl gpg
-    curl -o /tmp/i2p-repo-key.asc https://geti2p.net/_static/i2p-archive-keyring.gpg
-    sudo gpg --dearmor -o /usr/share/keyrings/i2p-archive-keyring.gpg /tmp/i2p-repo-key.asc
-    echo "deb [signed-by=/usr/share/keyrings/i2p-archive-keyring.gpg] https://deb.i2p.net/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/i2p.list
-    ```
-2.  Install and enable the I2P service:
-    ```bash
-    sudo apt-get update
-    sudo apt-get install i2p i2p-keyring
-    sudo systemctl enable i2p
-    sudo systemctl start i2p
-    ```
+### Step 2.3: I2P Installation
 
-### Step 2.4: Firewall & Transparent Proxying
-1.  **Configure I2P HTTP Proxy Tunnel**:
-    * Using a text-based browser on the Gateway (e.g., `w3m`), navigate to the router console at `http://127.0.0.1:7657`.
-    * Go to **"Hidden Service Manager"**.
-    * Modify the **"HTTP Proxy"** client tunnel with these settings:
-        * **Interface**: `10.152.152.10`
-        * **Port**: `4444`
+```bash
+apt-get update
+apt-get install -y apt-transport-https curl wget gpg
 
-2.  **Configure I2P SOCKS Proxy Tunnel**:
-    * Using a text-based browser on the Gateway (e.g., `w3m`), navigate to the router console at `http://127.0.0.1:7657`.
-    * Create a new **"SOCKS 4/4a/5"** client tunnel with these settings:
-        * **Name**: `i2nix-transproxy`
-        * **Interface**: `10.152.152.10`
-        * **Port**: `7667`
-        * **Outproxies**: `outproxy.acetone.i2p` (or another reliable outproxy)
-        * Enable **"Auto Start"**.
-    * Save and start the new tunnel.
-      
-2.  **Apply Firewall Rules**:
-    * Install the persistence tool: `sudo apt-get install iptables-persistent`.
-    * Create a script `firewall-setup.sh` with the following content and run it with `sudo bash firewall-setup.sh`.
+wget -q -O - https://repo.i2pd.xyz/.help/add_repo | sudo bash -s -
 
-    ```bash
-    #!/bin/bash
-    I2NIX_WORKSTATION="10.152.152.11"
-    GATEWAY_INTERNAL_IP="10.152.152.10"
-    INTERNAL_INTERFACE="enp7s0" # CHANGE IF YOURS IS DIFFERENT
-    I2P_DNS_PORT="7653"
-    I2P_TRANS_PORT="7667"
+apt update -y
+apt install -y i2pd
+systemctl enable i2pd
+echo "[+] i2pd installed."
 
-    # Flush old rules
-    iptables --flush
-    iptables --delete-chain
-    iptables --policy FORWARD DROP
+echo "[+] Configuring I2P and Firewall..."
+# Auto-configure I2P proxies to listen on the internal interface
+# This is a bit of a hack, assumes the user-specific config file exists after first run.
+# A more robust solution might use I2P's config update mechanisms.
+sleep 15 # Give I2P time to start and create initial configs
+I2P_CONFIG_DIR="/etc/i2pd"
+mkdir -p $I2P_CONFIG_DIR
+touch "$I2P_CONFIG_DIR/tunnels.conf"
+cat <<EOF > $I2P_CONFIG_DIR/'tunnels.conf'
+[httpproxy]
+type = httpproxy
+address = $GATEWAY_INTERNAL_IP
+port = 8444
+keys = http-keys.dat
 
-    # NAT Table: Redirect traffic
-    # DNS
-    iptables -t nat -A PREROUTING -i $INTERNAL_INTERFACE -p udp --dport 53 -j DNAT --to-destination $GATEWAY_INTERNAL_IP:$I2P_DNS_PORT
-    iptables -t nat -A PREROUTING -i $INTERNAL_INTERFACE -p tcp --dport 53 -j DNAT --to-destination $GATEWAY_INTERNAL_IP:$I2P_DNS_PORT
-    # All other TCP
-    iptables -t nat -A PREROUTING -i $INTERNAL_INTERFACE -p tcp --syn -j DNAT --to-destination $GATEWAY_INTERNAL_IP:$I2P_TRANS_PORT
+[alt-socks]
+type = socks
+address = $GATEWAY_INTERNAL_IP
+port = 8667
+keys = socks-keys.dat 
+EOF
 
-    # Filter Table: Permit forwarding of redirected traffic
-    iptables -A FORWARD -i $INTERNAL_INTERFACE -d $GATEWAY_INTERNAL_IP -p tcp --dport $I2P_TRANS_PORT -m state --state NEW -j ACCEPT
-    iptables -A FORWARD -i $INTERNAL_INTERFACE -d $GATEWAY_INTERNAL_IP -p tcp --dport $I2P_DNS_PORT -m state --state NEW -j ACCEPT
-    iptables -A FORWARD -i $INTERNAL_INTERFACE -d $GATEWAY_INTERNAL_IP -p udp --dport $I2P_DNS_PORT -m state --state NEW -j ACCEPT
-    iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+# Install and configure iptables
+# Pre-seed debconf to auto-accept iptables-persistent prompts
+echo "iptables-persistent iptables-persistent/autosave_v4 boolean true" | debconf-set-selections
+echo "iptables-persistent iptables-persistent/autosave_v6 boolean true" | debconf-set-selections
+apt-get install -y iptables-persistent
 
-    # Save rules
-    netfilter-persistent save
-    echo "Gateway firewall applied."
-    ```
+# Define firewall variables
+I2NIX_WORKSTATION="10.152.152.11"
+I2P_DNS_PORT="7653"
+I2P_TRANS_PORT="7654" # I2P's default transparent proxy port
+
+# Apply rules
+iptables -F
+iptables -t nat -F
+iptables -P FORWARD DROP
+
+# NAT Table redirection
+iptables -t nat -A PREROUTING -i $INTERNAL_IF -p udp --dport 53 -j DNAT --to $GATEWAY_INTERNAL_IP:$I2P_DNS_PORT
+iptables -t nat -A PREROUTING -i $INTERNAL_IF -p tcp --dport 53 -j DNAT --to $GATEWAY_INTERNAL_IP:$I2P_DNS_PORT
+iptables -t nat -A PREROUTING -i $INTERNAL_IF -p tcp --syn -j DNAT --to $GATEWAY_INTERNAL_IP:$I2P_TRANS_PORT
+
+# Filter Table forwarding
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNAL_IF -d $GATEWAY_INTERNAL_IP -j ACCEPT
+
+# Allow workstation ssh access to pull packages
+iptables -A INPUT -p tcp -s $I2NIX_WORKSTATION --dport 22 -j ACCEPT
+
+# Save the rules to make them persistent
+netfilter-persistent save
+
+echo "[+] Firewall configured and enabled."
+```
 
 ## 3. Building the i2nix-workstation
 
