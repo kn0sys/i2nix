@@ -22,7 +22,7 @@ echo "### Starting i2nix-gateway Configuration ###"
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
 apt update -y
-apt install -y jq
+apt install -y jq ufw
 # IMPORTANT: Verify your interface names with `ip a`.
 # enp1s0 = External (NAT/Bridged), enp7s0 = Internal (i2nix)
 EXTERNAL_IF=$(ip -j a | jq .[1].ifname | tr -d '"')
@@ -109,12 +109,14 @@ iptables -t nat -A PREROUTING -i $INTERNAL_IF -p tcp --syn -j DNAT --to $GATEWAY
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $INTERNAL_IF -d $GATEWAY_INTERNAL_IP -j ACCEPT
 
-# Allow workstation access to I2P proxies
-iptables -A INPUT -p tcp -s $I2NIX_WORKSTATION_IP --dport $I2P_HTTP_PROXY_PORT -j ACCEPT
-iptables -A INPUT -p tcp -s $I2NIX_WORKSTATION_IP --dport $I2P_SOCKS_PROXY_PORT -j ACCEPT
-
 # Save the rules to make them persistent
 netfilter-persistent save
+
+# Allow workstation access to I2P proxies
+ufw enable
+ufw allow from $I2NIX_WORKSTATION_IP to any port $I2P_HTTP_PROXY_PORT
+ufw allow from $I2NIX_WORKSTATION_IP to any port $I2P_SOCKS_PROXY_PORT
+ufw status
 
 echo "[+] Firewall configured and enabled."
 

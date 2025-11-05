@@ -8,8 +8,6 @@
 # Run as root: sudo ./workstation-setup.sh
 #
 
-# TODO: Configure desktop environment
-
 set -e
 
 # --- Safety Check ---
@@ -30,13 +28,6 @@ apt update -y
 apt install -y librewolf
 
 echo "[+] Packages ready for Workstation."
-
-echo "[+] Installing and hardening LibreWolf..."
-# Install
-gpg --dearmor -o /usr/share/keyrings/librewolf.gpg $PACKAGE_DIR/librewolf.gpg
-dpkg -i $PACKAGE_DIR/librewolf.deb || apt-get -f install -y
-dpkg -i $PACKAGE_DIR/firejail.deb || apt-get -f install -y
-rm -rf $PACKAGE_DIR
 
 # Install desktop
 tasksel
