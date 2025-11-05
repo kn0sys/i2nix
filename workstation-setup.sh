@@ -128,7 +128,7 @@ Categories=Network;WebBrowser;
 EOF
 
 # Remove default firefox
-apt remove firefox-esr
+apt remove -y firefox-esr
 
 # Apply Kernel Hardening
 echo "[+] Applying system hardening..."

@@ -75,7 +75,7 @@ if [ -z "$GATEWAY_IP" ]; then
 fi
 echo "Gateway IP is $GATEWAY_IP"
 ssh-keyscan "$GATEWAY_IP" >> ~/.ssh/known_hosts
-ssh i2nix@"$GATEWAY_IP" "sudo apt update -y && sudo apt install -y git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x gateway-setup.sh && sudo ./gateway-setup.sh"
+ssh -o "ConnectTimeout 60" i2nix@"$GATEWAY_IP" "sudo apt update -y && sudo apt install -y git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x gateway-setup.sh && sudo ./gateway-setup.sh"
 
 # --- Configure Workstation ---
 echo "Starting and configuring Workstation..."
@@ -89,7 +89,7 @@ if [ -z "$WORKSTATION_IP" ]; then
 fi
 echo "Workstation IP is $WORKSTATION_IP"
 ssh-keyscan "$WORKSTATION_IP" >> ~/.ssh/known_hosts
-ssh i2nix@"$WORKSTATION_IP" "sudo apt update -y && sudo apt install -y git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_SSH  && sudo reboot"
+ssh -o "ConnectTimeout 60" i2nix@"$WORKSTATION_IP" "sudo apt update -y && sudo apt install -y git && git clone https://github.com/kn0sys/i2nix && cd i2nix && chmod +x workstation-setup.sh && sudo ./workstation-setup.sh $GATEWAY_SSH  && sudo reboot"
 
 echo "i2nix installation complete. Launching workstation console."
 # Clean up preseed file

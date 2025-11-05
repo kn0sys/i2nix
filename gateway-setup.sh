@@ -22,7 +22,7 @@ echo "### Starting i2nix-gateway Configuration ###"
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
 apt update -y
-apt install -y jq ufw
+apt install -y jq
 # IMPORTANT: Verify your interface names with `ip a`.
 # enp1s0 = External (NAT/Bridged), enp7s0 = Internal (i2nix)
 EXTERNAL_IF=$(ip -j a | jq .[1].ifname | tr -d '"')
@@ -113,6 +113,8 @@ iptables -A FORWARD -i $INTERNAL_IF -d $GATEWAY_INTERNAL_IP -j ACCEPT
 netfilter-persistent save
 
 # Allow workstation access to I2P proxies
+apt update -y
+apt install -y ufw
 ufw enable
 ufw allow from $I2NIX_WORKSTATION_IP to any port $I2P_HTTP_PROXY_PORT
 ufw allow from $I2NIX_WORKSTATION_IP to any port $I2P_SOCKS_PROXY_PORT
