@@ -89,7 +89,6 @@ echo "iptables-persistent iptables-persistent/autosave_v6 boolean true" | debcon
 apt-get install -y iptables-persistent
 
 # Define firewall variables
-I2NIX_WORKSTATION="10.152.152.11"
 I2P_DNS_PORT="7653"
 I2P_TRANS_PORT="7654" # I2P's default transparent proxy port
 
@@ -107,32 +106,10 @@ iptables -t nat -A PREROUTING -i $INTERNAL_IF -p tcp --syn -j DNAT --to $GATEWAY
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $INTERNAL_IF -d $GATEWAY_INTERNAL_IP -j ACCEPT
 
-# Allow workstation ssh access to pull packages
-iptables -A INPUT -p tcp -s $I2NIX_WORKSTATION --dport 22 -j ACCEPT
-
 # Save the rules to make them persistent
 netfilter-persistent save
 
 echo "[+] Firewall configured and enabled."
-
-# --- 4. Prepare Packages for Workstation ---
-echo "[+] Downloading LibreWolf packages for Workstation..."
-mkdir -p /opt/i2nix_packages
-LIBREWOLF_URL=https://ftp.gwdg.de/pub/opensuse/repositories/home%3A/bgstack15%3A/aftermozilla/Debian_Unstable/amd64/librewolf_142.0-1_amd64.deb
-curl -o librewolf.deb $LIBREWOLF_URL
-LIBREOLF_GPG_URL=https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
-curl -o librewolf.gpg https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
-FIREJAIL_URL=https://netactuate.dl.sourceforge.net/project/firejail/firejail/firejail_0.9.74_1_amd64.deb?viasf=1
-curl -o firejail.deb $FIREJAIL_URL
-echo "[+] Packages ready for Workstation."
-
-LIBREWOLF_SHARE=/opt/i2nix_packages/
-
-mkdir -p $LIBREWOLF_SHARE
-
-cp librewolf.deb $LIBREWOLF_SHARE
-cp librewolf.gpg $LIBREWOLF_SHARE
-cp firejail.deb $LIBREWOLF_SHARE
 
 echo "### i2nix-gateway Configuration COMPLETE ###"
 

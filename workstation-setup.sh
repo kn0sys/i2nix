@@ -20,6 +20,32 @@ fi
 
 echo "### Starting i2nix-workstation Configuration ###"
 
+echo "[+] Installing core software..."
+
+echo "[+] Downloading LibreWolf packages for Workstation..."
+
+PACKAGE_DIR=/tmp/i2nix_install
+mkdir -p $PACKAGE_DIR
+LIBREWOLF_URL=https://ftp.gwdg.de/pub/opensuse/repositories/home%3A/bgstack15%3A/aftermozilla/Debian_Unstable/amd64/librewolf_142.0-1_amd64.deb
+curl -o librewolf.deb $LIBREWOLF_URL
+mv librewolf.deb $PACKAGE_DIR
+LIBREOLF_GPG_URL=https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
+curl -o librewolf.gpg https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
+mv librewolf.gpg $PACKAGE_DIR
+FIREJAIL_URL=https://netactuate.dl.sourceforge.net/project/firejail/firejail/firejail_0.9.74_1_amd64.deb?viasf=1
+curl -o firejail.deb $FIREJAIL_URL
+mv firejail.deb $PACKAGE_DIR
+echo "[+] Packages ready for Workstation."
+
+echo "[+] Installing and hardening LibreWolf..."
+# Install
+gpg --dearmor -o /usr/share/keyrings/librewolf.gpg $PACKAGE_DIR/librewolf.gpg
+dpkg -i $PACKAGE_DIR/librewolf.deb || apt-get -f install -y
+dpkg -i $PACKAGE_DIR/firejail.deb || apt-get -f install -y
+rm -rf $PACKAGE_DIR
+
+# Install desktop
+tasksel
 apt update -y
 apt install -y jq lynx
 
@@ -78,20 +104,11 @@ chmod +x /usr/local/bin/i2nix-timesync.sh
 echo "[+] System hardening applied."
 
 # --- 3. Install Software ---
-echo "[+] Installing core software..."
 
-echo "[+] Fetching LibreWolf and Firejail from Gateway..."
-scp -r i2nix@$GATEWAY_IP:/opt/i2nix_packages/ /tmp/i2nix_install
-echo "[+] Packages fetched."
-
-echo "[+] Installing and hardening LibreWolf..."
-# Install
-gpg --dearmor -o /usr/share/keyrings/librewolf.gpg /tmp/i2nix_install/librewolf.gpg
-dpkg -i /tmp/i2nix_install/librewolf.deb || apt-get -f install -y
-rm -rf /tmp/i2nix_install
 
 # Set lynx http proxy
 sh -c 'echo "http_proxy=http://10.152.152.10:8444" >> /etc/lynx/lynx.cfg'
+
 # Create system-wide policies for hardening (the professional way)
 mkdir -p /etc/librewolf/policies/
 cat <<EOF > /etc/librewolf/policies/policies.json
@@ -143,8 +160,6 @@ EOF
 
 # Set Hardened Librewolf as default browser
 xdg-settings set default-web-browser librewolf.desktop
-
-echo "[+] LibreWolf installed and hardened."
 
 # --- Final Steps ---
 echo ""
