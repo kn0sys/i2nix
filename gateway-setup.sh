@@ -47,6 +47,13 @@ EOF
 systemctl restart networking
 echo "[+] Network interfaces configured."
 
+# Define firewall variables
+I2NIX_WORKSTATION_IP=10.152.152.11
+I2P_DNS_PORT="7653"
+I2P_HTTP_PROXY_PORT="8444"
+I2P_SOCKS_PROXY_PORT="8667"
+I2P_TRANS_PORT="7654" # I2P's default transparent proxy port
+
 # --- 2. I2P Installation ---
 echo "[+] Installing I2P..."
 apt-get update
@@ -72,13 +79,13 @@ cat <<EOF > $I2P_CONFIG_DIR/'tunnels.conf'
 [httpproxy]
 type = httpproxy
 address = $GATEWAY_INTERNAL_IP
-port = 8444
+port = $I2P_HTTP_PROXY_PORT
 keys = http-keys.dat
 
 [alt-socks]
 type = socks
 address = $GATEWAY_INTERNAL_IP
-port = 8667
+port = $I2P_SOCKS_PROXY_PORT
 keys = socks-keys.dat 
 EOF
 
@@ -87,10 +94,6 @@ EOF
 echo "iptables-persistent iptables-persistent/autosave_v4 boolean true" | debconf-set-selections
 echo "iptables-persistent iptables-persistent/autosave_v6 boolean true" | debconf-set-selections
 apt-get install -y iptables-persistent
-
-# Define firewall variables
-I2P_DNS_PORT="7653"
-I2P_TRANS_PORT="7654" # I2P's default transparent proxy port
 
 # Apply rules
 iptables -F
@@ -105,6 +108,10 @@ iptables -t nat -A PREROUTING -i $INTERNAL_IF -p tcp --syn -j DNAT --to $GATEWAY
 # Filter Table forwarding
 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $INTERNAL_IF -d $GATEWAY_INTERNAL_IP -j ACCEPT
+
+# Allow workstation access to I2P proxies
+iptables -A INPUT -p tcp -s $I2NIX_WORKSTATION_IP --dport $I2P_HTTP_PROXY_PORT -j ACCEPT
+iptables -A INPUT -p tcp -s $I2NIX_WORKSTATION_IP --dport $I2P_SOCKS_PROXY_PORT -j ACCEPT
 
 # Save the rules to make them persistent
 netfilter-persistent save

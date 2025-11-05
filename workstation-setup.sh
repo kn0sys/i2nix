@@ -24,18 +24,11 @@ echo "[+] Installing core software..."
 
 echo "[+] Downloading LibreWolf packages for Workstation..."
 apt update -y
-apt install -y curl
-PACKAGE_DIR=/tmp/i2nix_install
-mkdir -p $PACKAGE_DIR
-LIBREWOLF_URL=https://ftp.gwdg.de/pub/opensuse/repositories/home%3A/bgstack15%3A/aftermozilla/Debian_Unstable/amd64/librewolf_142.0-1_amd64.deb
-curl -o librewolf.deb $LIBREWOLF_URL
-mv librewolf.deb $PACKAGE_DIR
-LIBREOLF_GPG_URL=https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
-curl -o librewolf.gpg https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.gpg
-mv librewolf.gpg $PACKAGE_DIR
-FIREJAIL_URL=https://netactuate.dl.sourceforge.net/project/firejail/firejail/firejail_0.9.74_1_amd64.deb?viasf=1
-curl -o firejail.deb $FIREJAIL_URL
-mv firejail.deb $PACKAGE_DIR
+apt install -y curl gpg extrepo firejail
+extrepo enable librewolf
+apt update -y
+apt install -y librewolf
+
 echo "[+] Packages ready for Workstation."
 
 echo "[+] Installing and hardening LibreWolf..."
@@ -144,7 +137,7 @@ Categories=Network;WebBrowser;
 EOF
 
 # Set Hardened Librewolf as default browser
-xdg-settings set default-web-browser librewolf.desktop
+update-alternatives --config x-www-browser
 
 # Apply Kernel Hardening
 echo "[+] Applying system hardening..."

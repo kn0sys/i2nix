@@ -5,7 +5,7 @@
 For automated installer see [install.md](https://github.com/kn0sys/i2nix/blob/main/install.md).
 
 # i2nix: Reproducible Build Guide
-**Version 1.0 (2025-08-10)**
+**Version 1.0**
 
 ## 1. Introduction
 i2nix is a security-focused Linux operating system designed to route all network connections through the I2P anonymity network. It follows the isolation principles of Whonix®, using a two-part virtual machine design:
@@ -19,6 +19,7 @@ This guide provides the steps to build both components from scratch for a truly 
 * A Linux host machine with KVM/QEMU and `virt-manager, libvirt, virsh, virt-install, virt-viewer` installed.
 * A Debian net-installer ISO (e.g., `debian-13-netinst.iso`).
 * Basic familiarity with the Linux command line and `virt-manager`.
+* For system requirements see `install.sh` and `virt-install` options `vcpus`, `ram` and `disk-path` `size`.
 
 ## 2. Building the i2nix-gateway
 
