@@ -136,8 +136,8 @@ Type=Application
 Categories=Network;WebBrowser;
 EOF
 
-# Set Hardened Librewolf as default browser
-update-alternatives --config x-www-browser
+# Remove default firefox
+apt remove firefox-esr
 
 # Apply Kernel Hardening
 echo "[+] Applying system hardening..."
