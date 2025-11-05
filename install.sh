@@ -54,11 +54,10 @@ virt-install \
   --disk path=/var/lib/libvirt/images/i2nix-workstation.qcow2,size=16 \
   --os-variant debian13 \
   --network bridge=virbr0,model=virtio \
-  --graphics none \
-  --console pty,target_type=serial \
+  --graphics spice \
   --location "$PWD/$ISO_FILENAME" \
   --initrd-inject workstation-preseed.cfg \
-  --extra-args="hostname=i2nix-workstation auto=true priority=critical preseed/file=/workstation-preseed.cfg console=ttyS0,115200n8" \
+  --extra-args="hostname=i2nix-workstation auto=true priority=critical preseed/file=/workstation-preseed.cfg" \
   --wait -1
 
 echo "Both VMs have been installed."
