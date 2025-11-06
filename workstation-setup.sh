@@ -30,9 +30,8 @@ apt install -y librewolf
 echo "[+] Packages ready for Workstation."
 
 # Install desktop
-tasksel
 apt update -y
-apt install -y jq lynx
+apt install -y xfce4 jq lynx
 
 # --- 1. Network Configuration ---
 echo "[+] Configuring network interfaces..."
