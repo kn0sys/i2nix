@@ -108,7 +108,8 @@ cat <<EOF > /etc/librewolf/policies/policies.json
         "privacy.resistFingerprinting": { "Value": true, "Status": "locked" },
         "webgl.disabled": { "Value": true, "Status": "locked" },
         "media.peerconnection.enabled": { "Value": false, "Status": "locked" },
-        "privacy.firstparty.isolate": { "Value": true, "Status": "locked" }
+        "privacy.firstparty.isolate": { "Value": true, "Status": "locked" },
+        "privacy.userContext.enabled": { "Value": true, "Status": "locked" }
  }
   }
 }
@@ -145,4 +146,3 @@ sysctl --system
 echo ""
 echo "### i2nix-workstation Configuration COMPLETE ###"
 echo "### It is highly recommended to REBOOT the system now. ###"
-
