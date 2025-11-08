@@ -88,6 +88,7 @@ cat <<EOF > /etc/librewolf/policies/policies.json
     "DisableFirefoxAccounts": true,
     "NetworkPrediction": false,
     "DisableFeedbackCommands": true,
+    "HttpsOnlyMode": "disallowed",
     "DNSOverHTTPS": {
         "Enabled": false
     },

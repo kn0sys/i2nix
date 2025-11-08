@@ -5,7 +5,7 @@
 For automated installer see [install.md](https://github.com/kn0sys/i2nix/blob/main/install.md).
 
 # i2nix: Reproducible Build Guide
-**Version 1.0**
+**Version i2nix-v0.1.1**
 
 ## 1. Introduction
 i2nix is a security-focused Linux operating system designed to route all network connections through the I2P anonymity network. It follows the isolation principles of Whonix®, using a two-part virtual machine design:
