@@ -68,6 +68,8 @@ systemctl start i2p-service.socket
 
 ### Configure the Firefox Browser
 
+NOTE: If manually setting, ensure `Use this proxy for HTTPS` is checked
+
 ```bash
 
 mkdir -p /etc/firefox/policies/
