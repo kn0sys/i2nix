@@ -119,4 +119,14 @@ Categories=Network;WebBrowser;
 EOF
 ```
 
+### Global http proxy and DNS
+
+Append the following to `/rw/config/rc.local`
+
+```bash
+echo "nameserver <sys-i2nix ip>" > /etc/resolv.conf
+echo "export http_proxy=127.0.0.1:4444" >> /home/user/.bashrc
+echo "export https_proxy=127.0.0.1:4444" >> /home/user/.bashrc
+```
+
 TODO: anon-i2nix vm testing, librewolf installation, etc
