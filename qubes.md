@@ -17,62 +17,43 @@
 * Enable the `provides network service to other qubes` checkbox
 * Set the NetVM as `sys-firewall` and add the `network-manager` service
 
-### I2P Proxy Script
+### Enable Permanent Port Binding
 
-`vim /rw/config/start_i2p_proxy.sh`
-
-```bash
-#!/bin/sh
-killall i2pd
-QUBES_IP=$(xenstore-read qubes_ip)
-I2P_HTTP_PROXY_PORT=8444
-I2P_DNS_PORT=7653
-I2P_TRANS_PORT="7654"
-
-if [ X$QUBES_IP == X ]; then
-echo "Error getting QUBES IP!"
-echo "Not starting i2p, but setting the traffic redirection anyway to prevent leaks."
-QUBES_IP="127.0.0.1"
-else
-i2pd \
---httpproxy.port 8444 \
---httpproxy.address QUBES_IP \
-|| echo "Error starting i2p!"
-
-fi
-
-echo “0” > /proc/sys/net/ipv4/ip_forward
-/sbin/iptables -t nat -F
-/sbin/iptables -t nat -A PREROUTING -i vif+ -p udp --dport 53 -j DNAT --to-destination $QUBES_IP:53
-/sbin/iptables -t nat -A PREROUTING -i vif+ -p tcp -j DNAT --to-destination $QUBES_IP:$I2P_TRANS_PORT
-/sbin/iptables -I INPUT 1 -i vif+ -p udp --dport 53 -j ACCEPT
-/sbin/iptables -I INPUT 2 -i vif+ -p tcp --dport I2P_TRANS_PORT -j ACCEPT
-/sbin/iptables -F FORWARD
-
-echo “1” > /proc/sys/net/ipv4/ip_forward
-```
-
-### Autostart
-
-`vim /rw/config/rc.local`
+`/rw/config/i2p-service.socket`
 
 ```bash
+[Unit]
+Description=my-i2p-service
 
-#!/bin/sh
+[Socket]
+ListenStream=127.0.0.1:4444
+Accept=true
 
-chkconfig qubes_netwatcher off
-chkconfig qubes_firewall off
-/rw/config/start_i2p_proxy.sh
+[Install]
+WantedBy=sockets.target
 ```
 
-### Restart on NetVM Dynamic Switching
-
-`vim /rw/config/qubes_ip_change_hook`
+`/rw/config/i2p-service@.serice`
 
 ```bash
-#!/bin/sh
-/rw/config/start_i2p_proxy.sh
+[Unit]
+Description=i2p-service
+
+[Service]
+ExecStart=qrexec-client-vm '' qubes.ConnectTCP+4444
+StandardInput=socket
+StandardOutput=inherit
 ```
+
+Append to `/rw/config/rc.local`
+
+```bash
+cp -r /rw/config/i2p-service.socket /rw/config/i2p-service@.service /lib/systemd/system/
+systemctl daemon-reload
+systemctl start i2p-service.socket
+```
+
+[Reference](https://doc.qubes-os.org/en/latest/user/security-in-qubes/firewall.html)
 
 ## i2nix-workstation configuration
 
@@ -80,23 +61,17 @@ chkconfig qubes_firewall off
 * enter `i2nix-workstation` for the name
 * start the template and open a terminal
 
-### Install Software
-* `sudo dnf update -y`
-* `sudo dnf install -y firejail`
-* `curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo`
-* `sudo dnf install -y librewolf` 
-
 ### Create the AppVM
-* Create a AppVM new qube using the `i2nix-gateway` template
+* Create a AppVM new qube using the `i2nix-workstation` template
 * Enter `anon-i2nix` for the name
 * Set the NetVM as `sys-i2nix`
 
-### Configure the Librewolf Browser
+### Configure the Firefox Browser
 
 ```bash
 
-mkdir -p /etc/librewolf/policies/
-cat <<EOF > /etc/librewolf/policies/policies.json
+mkdir -p /etc/firefox/policies/
+cat <<EOF > /etc/firefox/policies/policies.json
 {
   "policies": {
     "DisableFirefoxStudies": true,
@@ -116,9 +91,7 @@ cat <<EOF > /etc/librewolf/policies/policies.json
     "Proxy": {
       "Mode": "manual",
       "Locked": true,
-      "HTTPProxy": "$GATEWAY_IP:8444",
-      "SOCKSProxy": "$GATEWAY_IP:8667",
-      "SOCKSVersion": 5,
+      "HTTPProxy": "127.0.0.1:4444",
       "UseSOCKSProxyForAllProtocols": false,
       "ProxyDNS": true
     },
@@ -133,15 +106,15 @@ cat <<EOF > /etc/librewolf/policies/policies.json
 EOF
 
 mkdir -p /usr/local/share/applications
-cat <<EOF > /usr/local/share/applications/librewolf.desktop
+cat <<EOF > /usr/local/share/applications/firefox.desktop
 [Desktop Entry]
-Name=LibreWolf (Sandboxed)
-Exec=firejail librewolf %u
+Name=Firefox (Sandboxed)
+Exec=firejail firefox %u
 Comment=Sandboxed private web browser
-Icon=librewolf
+Icon=firefox
 Type=Application
 Categories=Network;WebBrowser;
 EOF
 ```
 
-TODO: anon-i2nix vm testing
+TODO: anon-i2nix vm testing, librewolf installation, etc
