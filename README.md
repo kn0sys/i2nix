@@ -4,6 +4,8 @@
 
 For automated installer see [install.md](https://github.com/kn0sys/i2nix/blob/main/install.md).
 
+Qubes setup (in progress) located at [qubes.md](https://github.com/kn0sys/i2nix/blob/main/qubes.md).
+
 # i2nix: Reproducible Build Guide
 **Version i2nix-v0.1.1**
 
