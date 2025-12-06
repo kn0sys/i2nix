@@ -17,40 +17,12 @@
 * Enable the `provides network service to other qubes` checkbox
 * Set the NetVM as `sys-firewall` and add the `network-manager` service
 
-### Enable Permanent Port Binding
+### Enable Simple Port Binding
 
-`/rw/config/i2p-service.socket`
-
-```bash
-[Unit]
-Description=my-i2p-service
-
-[Socket]
-ListenStream=127.0.0.1:4444
-Accept=true
-
-[Install]
-WantedBy=sockets.target
-```
-
-`/rw/config/i2p-service@.serice`
+In `dom0` edit `/etc/qubes/policy.d/30-user-networking.policy`
 
 ```bash
-[Unit]
-Description=i2p-service
-
-[Service]
-ExecStart=qrexec-client-vm '' qubes.ConnectTCP+4444
-StandardInput=socket
-StandardOutput=inherit
-```
-
-Append to `/rw/config/rc.local`
-
-```bash
-cp -r /rw/config/i2p-service.socket /rw/config/i2p-service@.service /lib/systemd/system/
-systemctl daemon-reload
-systemctl start i2p-service.socket
+qubes.ConnectTCP * anon-i2nix @default allow target=sys-i2nix
 ```
 
 [Reference](https://doc.qubes-os.org/en/latest/user/security-in-qubes/firewall.html)
@@ -119,12 +91,12 @@ Categories=Network;WebBrowser;
 EOF
 ```
 
-### Global http proxy and DNS
+### Global http proxy
 
 Append the following to `/rw/config/rc.local`
 
 ```bash
-echo "nameserver <sys-i2nix ip>" > /etc/resolv.conf
+qvm-connect-tcp 4444:@default:4444
 echo "export http_proxy=127.0.0.1:4444" >> /home/user/.bashrc
 echo "export https_proxy=127.0.0.1:4444" >> /home/user/.bashrc
 ```
