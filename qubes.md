@@ -66,6 +66,7 @@ cat <<EOF > /etc/firefox/policies/policies.json
       "Mode": "manual",
       "Locked": true,
       "HTTPProxy": "127.0.0.1:4444",
+      "UseHTTPProxyForAllProtocols": true,
       "UseSOCKSProxyForAllProtocols": false,
       "ProxyDNS": true
     },
