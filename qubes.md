@@ -10,7 +10,7 @@
 * `sudo dnf update -y`
 * `sudo dnf copr enable supervillain/i2pd`
 * `sudo dnf install i2pd`
-* `sudo systecmtl enable --now i2pd
+* `sudo systecmtl enable --now i2pd`
 
 ### Create the NetVM
 * Create a AppVM (ProxyVM) new qube using the `i2nix-gateway` template
