@@ -100,6 +100,8 @@ Append the following to `/rw/config/rc.local`
 qvm-connect-tcp 4444:@default:4444
 echo "export http_proxy=127.0.0.1:4444" >> /home/user/.bashrc
 echo "export https_proxy=127.0.0.1:4444" >> /home/user/.bashrc
+# Disable ICMP
+qvm-firewall anon-i2nix add --before - drop proto=icmp
 ```
 
 TODO: anon-i2nix vm testing, librewolf installation, etc
