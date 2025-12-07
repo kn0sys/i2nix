@@ -11,6 +11,7 @@
 * `sudo dnf copr enable supervillain/i2pd`
 * `sudo dnf install i2pd`
 * `sudo systecmtl enable --now i2pd`
+* shutdown `i2nix-gateway`
 
 ### Create the NetVM
 * Create a AppVM (ProxyVM) new qube using the `i2nix-gateway` template
@@ -33,6 +34,8 @@ qubes.ConnectTCP * anon-i2nix @default allow target=sys-i2nix
 ### Clone the Fedora TemplateVM
 * enter `i2nix-workstation` for the name
 * start the template and open a terminal
+* `sudo dnf install -y firejail`
+* shutdown `i2nix-workstation`
 
 ### Create the AppVM
 * Create a AppVM new qube using the `i2nix-workstation` template
