@@ -96,7 +96,7 @@ Categories=Network;WebBrowser;
 EOF
 ```
 
-### Global http proxy
+### Global HTTP Proxy / Persistent Port Binding
 
 Append the following to `/rw/config/rc.local`
 
@@ -108,4 +108,6 @@ echo "export https_proxy=127.0.0.1:4444" >> /home/user/.bashrc
 qvm-firewall anon-i2nix add --before 0 drop proto=icmp
 ```
 
-TODO: anon-i2nix vm testing, librewolf installation, etc
+### Librewolf Installation
+
+Install to `anon-i2nix` (***AppVM***) using the [appimage instructions](https://librewolf.net/installation/linux/#appimage).
