@@ -3,7 +3,7 @@
 ## i2nix-gateway configuration
 
 ### Clone the Fedora TemplateVM
-* Enter `i2nix-gateway` for the name
+* Enter `i2nix-gateway-fXX` for the name (f42 is the current template version)
 * Start the template and open a terminal
 
 ### Install Software
@@ -14,7 +14,7 @@
 * shutdown `i2nix-gateway`
 
 ### Create the NetVM
-* Create a AppVM (ProxyVM) new qube using the `i2nix-gateway` template
+* Create a AppVM (ProxyVM) new qube using the `i2nix-gateway-f42` template
 * Enter `sys-i2nix` for the name
 * Enable the `provides network service to other qubes` checkbox
 * Set the NetVM as `sys-firewall` and add the `network-manager` service
@@ -32,13 +32,13 @@ qubes.ConnectTCP * anon-i2nix @default allow target=sys-i2nix
 ## i2nix-workstation configuration
 
 ### Clone the Fedora TemplateVM
-* enter `i2nix-workstation` for the name
+* enter `i2nix-workstation-fXX` for the name
 * start the template and open a terminal
 * `sudo dnf install -y firejail`
 * shutdown `i2nix-workstation`
 
 ### Create the AppVM
-* Create a AppVM new qube using the `i2nix-workstation` template
+* Create a AppVM new qube using the `i2nix-workstation-fXX` template
 * Enter `anon-i2nix` for the name
 * Set the NetVM as `sys-i2nix`
 
