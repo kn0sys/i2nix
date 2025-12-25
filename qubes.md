@@ -27,6 +27,8 @@ In `dom0` edit `/etc/qubes/policy.d/30-user-networking.policy`
 qubes.ConnectTCP * anon-i2nix @default allow target=sys-i2nix
 ```
 
+NOTE: When upgrading or restoring from backups this setting is not persistent.
+
 [Reference](https://doc.qubes-os.org/en/latest/user/security-in-qubes/firewall.html)
 
 ## i2nix-workstation configuration
