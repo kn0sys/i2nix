@@ -12,7 +12,11 @@
 * `sudo dnf install i2pd`
 * `sudo systecmtl enable --now i2pd`
 * shutdown `i2nix-gateway`
-
+  
+### Mail Configuration
+* uncomment the `POP3` and `SMTP` tunnels in `/etc/i2pd/tunnels.conf`
+* `sudo systemctl restart i2pd`
+  
 ### Create the NetVM
 * Create a AppVM (ProxyVM) new qube using the `i2nix-gateway-f42` template
 * Enter `sys-i2nix` for the name
@@ -103,7 +107,12 @@ EOF
 Append the following to `/rw/config/rc.local`
 
 ```bash
+# HTTP Proxy
 qvm-connect-tcp 4444:@default:4444
+# POP3
+qvm-connect-tcp 7660:@default:7660
+# SMTP
+qvm-connect-tcp 7659:@default:7659
 echo "export http_proxy=127.0.0.1:4444" >> /home/user/.bashrc
 echo "export https_proxy=127.0.0.1:4444" >> /home/user/.bashrc
 # Disable ICMP
@@ -113,3 +122,8 @@ qvm-firewall anon-i2nix add --before 0 drop proto=icmp
 ### Librewolf Installation
 
 Install to `anon-i2nix` (***AppVM***) using the [appimage instructions](https://librewolf.net/installation/linux/#appimage).
+
+### Mail Configuration
+
+* open Thunderbird
+* https://eyedeekay.github.io/Thunderbird-I2P-Configuration/index.html
