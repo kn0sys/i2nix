@@ -196,5 +196,12 @@ echo "[+] Firewall configured and enabled."
     ```
 2.  Apply settings: `sudo sysctl --system`.
 
+### Legwork - Default Search Engine
+
+* Go to Firefox(Librewolf) `about:preferences#search` - `search shortcuts` - `Add`
+* Search Engine Name: `Legwork`
+* URL: `http://legwork.i2p/yacysearch.html?query=%s`
+* Save Engine
+* Set Default to `Legwork`
 ---
 *This guide provides the steps to create a functional i2nix system. Further security hardening is always encouraged.*
